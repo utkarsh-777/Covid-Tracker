@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SignUp</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+</head>
+<body>
+    <div class="container border mt-5">
+        <h1 class="text-center">Sign Up</h1>
+            <form class='form-signin' method="POST">
+                <div class='form-label-group p-2'>
+                    <label for="name"><h3>Name</h3></label>
+                    <input type="text" class="form-control" name="name" id="name" placeholder="Your name" required />
+                </div>
+                <div class='form-label-group p-2'>
+                    <label for="username"><h3>Username</h3></label>
+                    <input type="text" class="form-control" name="username" id="username" placeholder="Your username" required/>
+                </div>
+                <div class='form-label-group p-2'>
+                    <label for="email"><h3>Email</h3></label>
+                    <input type="email" class="form-control" name="email" id="email" placeholder="Your email" required/>
+                </div>
+                <div class='form-label-group p-2'>
+                    <label for="password"><h3>Password</h3></label>
+                    <input type="password" class="form-control" name="password" id="password" placeholder="Your password" required/>
+                </div>
+                <div class='form-label-group p-2'>
+                    <label for="pic"><h3>Profile Picture URL</h3></label>
+                    <input type="text" class="form-control" name="pic" id="pic" placeholder="URL" />
+                </div>
+                <button class='btn btn-block btn-outline-dark mt-2' type="submit">Submit</button>
+            </form>
+            <a href="/user/login" class="p-2"><button class='btn btn-block btn-outline-dark'>Already a user! Login</button></a>
+        </div>
+</body>
+</html>
+
+

@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+</head>
+<body>
+    <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
+<div>
+    <style>
+        body {
+          background-image: url('https://www.toristy.com/hubfs/corona-virus_blank.png');
+        }
+    </style>
+    <script>
+        var arr = [];
+        const search = () => {
+            var c = document.getElementById('country').value;
+                fetch(`https://corona.lmao.ninja/v2/countries/${c}`)
+                .then(res => res.json())
+                .then(json => {
+
+                    if(json.country!==undefined){
+                    
+                    var obje = {};
+                    obje.y = (json.cases/json.population)*100;
+                    obje.label = json.country;
+                    arr.push(obje);
+
+                    document.getElementById('divc').setAttribute('style','display: block');
+                    document.getElementById('divsd').setAttribute('style','display: none');
+                    document.getElementById('nfc').setAttribute('style','display: none');
+                    document.getElementById('nfsd').setAttribute('style','display: none');
+                    document.getElementById('divs').setAttribute('style','display: none');
+
+                    document.getElementById('flag').setAttribute('src',`${json.countryInfo.flag}`)
+                    document.getElementById('countryname').value = json.country;
+                    document.getElementById('cases').value = json.cases;
+                    document.getElementById('tcases').value = json.todayCases;
+                    document.getElementById('deaths').value = json.deaths;
+                    document.getElementById('tdeaths').value = json.todayDeaths;
+                    document.getElementById('recovered').value = json.recovered;
+                    document.getElementById('trecovered').value = json.todayRecovered;
+                    document.getElementById('active').value = json.active;
+                    document.getElementById('critical').value = json.critical;
+                    document.getElementById('tests').value = json.tests;
+                    document.getElementById('otperpeople').value = json.oneTestPerPeople;
+                    document.getElementById('population').value = json.population;
+
+                    chart();
+
+                    }else{
+                        document.getElementById('divsd').setAttribute('style','display: none');
+                        document.getElementById('divc').setAttribute('style','display: none');
+                        document.getElementById('divs').setAttribute('style','display: none');
+                        document.getElementById('nfsd').setAttribute('style','display: none');
+
+                        document.getElementById('nfc').setAttribute('style','display: block');
+                        document.getElementById('nfc').innerHTML =  json.message;
+                    }
+            }).catch(err => console.log(err))
+        }
+
+        const chart = () => {
+            document.getElementById('chartbox').setAttribute('style','display: block');
+            //console.log(arr);
+            var chart = new CanvasJS.Chart("chartContainer", {
+                        animationEnabled: true,
+                        title:{
+                            text:"Corona Cases Around The World"
+                        },
+                        axisX:{
+                            interval: 1
+                        },
+                        axisY2:{
+                            interlacedColor: "rgba(1,77,101,.2)",
+                            gridColor: "rgba(1,77,101,.1)",
+                            title: "Percentage of Active Cases for Countries"
+                        },
+                        data: [{
+                            type: "bar",
+                            name: "companies",
+                            axisYType: "secondary",
+                            color: "#014D65",
+                            dataPoints: arr
+                        }]
+                    });
+                    chart.render();
+        }
+
+        const searchIndia = () => {
+            fetch("https://api.covid19india.org/state_district_wise.json")
+                .then(res => res.json())
+                .then(json => {
+                    var state = document.getElementById('state').value;
+                    var district = document.getElementById('district').value;
+
+                    if(json && json[`${state}`] && json[`${state}`].districtData[`${district}`] !== undefined){
+                    const obj = json[`${state}`].districtData[`${district}`];
+
+                    document.getElementById('divsd').setAttribute('style','display: block');
+
+                    document.getElementById('divc').setAttribute('style','display: none');
+                    document.getElementById('nfc').setAttribute('style','display: none');
+                    document.getElementById('nfsd').setAttribute('style','display: none');
+                    document.getElementById('chartbox').setAttribute('style','display: none');
+                    document.getElementById('divs').setAttribute('style','display: none');
+
+                    document.getElementById('state2').value = state;
+                    document.getElementById('district2').value = district;
+                    document.getElementById('active2').value = obj.active;
+                    document.getElementById('confirmed2').value = obj.confirmed;
+                    document.getElementById('deceased2').value = obj.deceased;
+                    document.getElementById('recovered2').value = obj.recovered;
+                    document.getElementById('notes2').value = obj.notes;
+                    }else{
+                        document.getElementById('divsd').setAttribute('style','display: none');
+                        document.getElementById('divc').setAttribute('style','display: none');
+                        document.getElementById('nfc').setAttribute('style','display: none');
+                        document.getElementById('divs').setAttribute('style','display: none');
+
+                        document.getElementById('nfsd').setAttribute('style','display: block');
+                    }  
+                }).catch(err => console.log(err))
+        }
+
+        const f = () => {
+        fetch("https://api.covid19india.org/data.json")
+            .then(res => res.json())
+            .then(json => {
+                console.log(json);
+                        document.getElementById('divsd').setAttribute('style','display: none');
+                        document.getElementById('divc').setAttribute('style','display: none');
+                        document.getElementById('nfc').setAttribute('style','display: none');
+                        document.getElementById('nfsd').setAttribute('style','display: none');
+                        document.getElementById('chartbox').setAttribute('style','display: none');
+                        
+               for(var i=0;i<json.statewise.length;i++){
+                   if(json.statewise[i].state === document.getElementById('state01').value){
+
+                       document.getElementById('divs').setAttribute('style','display: block');
+                       document.getElementById('nfs').setAttribute('style','display: none');
+
+                       var obj = json.statewise[i];
+                       document.getElementById('state0').value = obj.state;
+                       document.getElementById('active0').value = obj.active;
+                       document.getElementById('confirmed0').value = obj.confirmed;
+                       document.getElementById('deaths0').value = obj.deaths;
+                       document.getElementById('recovered0').value = obj.recovered;
+                       document.getElementById('migrate0').value = obj.migratedother;
+                       document.getElementById('lastupdate0').value = obj.lastupdatedtime;
+                       document.getElementById('notes0').value = obj.statenotes;
+                       
+                       console.log(json.statewise[i]);
+                       return;
+                  }
+               }
+               document.getElementById('nfs').setAttribute('style','display: block');
+            })
+            .catch(err => console.log(err))
+        }
+
+      </script>
+
+    <div>
+        <nav class="navbar navbar-expand-lg navbar-light">
+            <p class="navbar-brand text-white">Corona Tracker App</p>
+            <a href="/user/login" class="ml-auto mr-1"><button class="btn btn-danger">Logout</button></a>
+        </nav>
+        <h4 class="text-center text-white ml-2 mt-2">Welcome, <%= Data.name %> !</h4>
+        <img src="<%= Data.profilepic %>" class="mx-auto d-block rounded" height="65px" width="75px" />
+    
+    </div>
+    <div class="container fluid border mt-5 bg-muted">
+            <h1 class="text-center mb-3 text-white">Corona Live Information</h1>
+
+                <div>
+                <input type="text" id="country" class="form-control" placeholder="Country Name" />
+                <button id="btn" class="btn btn-info m-2" onclick="search()">Search by Country Name</button>
+                </div>
+                <div class="container border p-2 mb-2">
+                    <h3 class="text-white">For India</h3>
+                    <div class="container mb-3">
+                    <span class="text-white">State:</span> <input type="text" id="state01" class="form-control" placeholder="State Name" />
+                    <button class="btn btn-success m-1" onclick="f()">Search By State Name</button>
+                    </div>
+                    <div class="container">
+                    <span class="text-white">State:</span> <input type="text" id="state" class="form-control" placeholder="State" />
+                    <span class="text-white">District:</span> <input type="text" id="district" class="form-control" placeholder="District" />
+                    <button class="btn btn-success m-1" onclick="searchIndia()">Search District Status</button>
+                    </div>
+                </div>
+
+                <div class="container border mt-5 mb-5 p-2" id="divc" style="display: none">
+
+                    <div class="mt-2 mb-4 rounded" id="chartbox" style="display: none;">
+                        <div class="mt-2 mb-4 mx-auto rounded d-block" id="chartContainer" style="height: 350px; width: 75%;"></div>
+                    </div>
+
+                    <img id="flag" class="mt-2 mb-2 mx-auto rounded d-block" height="100px" width="175px" /><br>
+
+                    <span class="text-white">Country:</span> <input type="text" id="countryname" class="form-control" />
+                    <span class="text-white">Cases:</span> <input type="text" id="cases" class="form-control" />
+                    <span class="text-white">Cases Reported Today:</span> <input type="text" id="tcases" class="form-control" />
+                    <span class="text-white">Deaths:</span> <input type="text" id="deaths" class="form-control" />
+                    <span class="text-white">Deaths Today:</span><input type="text" id="tdeaths" class="form-control" />
+                    <span class="text-white">Recovered:</span> <input type="text" id="recovered" class="form-control" />
+                    <span class="text-white">Recovered Today:</span> <input type="text" id="trecovered" class="form-control" />
+                    <span class="text-white">Active Cases:</span> <input type="text" id="active" class="form-control" />
+                    <span class="text-white">Critical Cases:</span> <input type="text" id="critical" class="form-control" />
+                    <span class="text-white">Tests Conducted:</span> <input type="text" id="tests" class="form-control" />
+                    <span class="text-white">Test Conducted Per People:</span> <input type="text" id="otperpeople" class="form-control" />
+                    <span class="text-white">Population:</span> <input type="text" id="population" class="form-control" />
+                </div>
+
+                <div class="container border mt-5 mb-5 p-2" id="divs" style="display: none">
+                    <span class="text-white">State:</span> <input type="text" id="state0" class="form-control" />
+                    <span class="text-white">Active Cases:</span> <input type="text" id="active0" class="form-control" />
+                    <span class="text-white">Confirmed Cases:</span> <input type="text" id="confirmed0" class="form-control" />
+                    <span class="text-white">Deaths:</span> <input type="text" id="deaths0" class="form-control" />
+                    <span class="text-white">Recovered:</span> <input type="text" id="recovered0" class="form-control" />
+                    <span class="text-white">Migrated To Other States:</span> <input type="text" id="migrate0" class="form-control" />
+                    <span class="text-white">Last Updated At:</span> <input type="text" id="lastupdate0" class="form-control" />
+                    <span class="text-white">Additional Info:</span> <textarea id="notes0" rows="4" class="form-control"></textarea>
+                </div>
+
+                <div class="container border mt-5 mb-5 p-2" id="divsd" style="display: none">
+                    <span class="text-white">State:</span> <input type="text" id="state2" class="form-control" />
+                    <span class="text-white">District:</span> <input type="text" id="district2" class="form-control" />
+                    <span class="text-white">Active Cases:</span> <input type="text" id="active2" class="form-control" />
+                    <span class="text-white">Confirmed Cases:</span> <input type="text" id="confirmed2" class="form-control" />
+                    <span class="text-white">Deceased:</span> <input type="text" id="deceased2" class="form-control" />
+                    <span class="text-white">Recovered:</span> <input type="text" id="recovered2" class="form-control" />
+                    <span class="text-white">Additional Info:</span> <input type="text" id="notes2" class="form-control" />
+                </div>
+                <p id="nfc" style="display: none" class="text-danger font-weight-bold"></p>
+                <p id="nfsd" style="display: none" class="text-danger font-weight-bold">Enter a valid state,district pair! (India Only)</p>
+                <p id="nfs" style="display: none" class="text-danger font-weight-bold">Enter a valid state! (India Only)</p>
+        </div>
+
+    <div class="navbar navbar-expand-lg bg-light mt-5">
+        <span class="text-muted">
+            Email: <%= Data.email %>
+            Username: <%= Data.username %>
+            ID: <%= Data.id %>
+        </span>
+        <span class="text-right text-muted">
+            
+        </span>
+    </div>
+
+</div>
+    
+</body>
+</html>
+
+
